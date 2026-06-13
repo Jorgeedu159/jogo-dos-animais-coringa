@@ -1,4 +1,4 @@
-# Jogo dos Animais com Carta Coringa
+# Olha o Macaco! com Carta Coringa
 
 Este projeto contém duas versões do jogo:
 
@@ -45,7 +45,7 @@ Este projeto contém duas versões do jogo:
 2. Crie um repositório no GitHub e envie o código com:
    - `git init`
    - `git add .`
-   - `git commit -m "Versão inicial do jogo dos animais"`
+   - `git commit -m "Versão inicial do Olha o Macaco!"`
    - `git branch -M main`
    - `git remote add origin <URL_DO_REPO>`
    - `git push -u origin main`
