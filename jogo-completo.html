@@ -1,0 +1,665 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jogo dos Animais - Coringa</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .tela {
+            opacity: 1;
+            visibility: visible;
+            transition: opacity 0.3s, visibility 0.3s;
+        }
+
+        .tela.oculta {
+            opacity: 0;
+            visibility: hidden;
+            position: absolute;
+        }
+
+        /* Tela Inicial */
+        .container-inicial {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+            max-width: 500px;
+            width: 100%;
+            text-align: center;
+        }
+
+        .container-inicial h1 {
+            font-size: 2.5em;
+            color: #667eea;
+            margin-bottom: 10px;
+        }
+
+        .subtitulo {
+            font-size: 1.2em;
+            color: #666;
+            margin-bottom: 30px;
+        }
+
+        .input-grupo {
+            margin: 20px 0;
+            text-align: left;
+        }
+
+        .input-grupo label {
+            display: block;
+            font-weight: bold;
+            margin-bottom: 10px;
+            color: #333;
+        }
+
+        .input-grupo input {
+            width: 100%;
+            padding: 12px;
+            font-size: 1em;
+            border: 2px solid #667eea;
+            border-radius: 8px;
+            text-align: center;
+        }
+
+        .container-nomes {
+            margin: 20px 0;
+        }
+
+        .input-nome {
+            display: flex;
+            margin-bottom: 10px;
+            gap: 10px;
+        }
+
+        .input-nome label {
+            min-width: 110px;
+            padding-top: 10px;
+        }
+
+        .input-nome input {
+            flex: 1;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 1em;
+        }
+
+        .btn-grande {
+            width: 100%;
+            padding: 15px;
+            font-size: 1.1em;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: transform 0.2s, box-shadow 0.2s;
+            margin-top: 20px;
+        }
+
+        .btn-grande:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-grande:active {
+            transform: translateY(0);
+        }
+
+        /* Tela do Jogo */
+        #telaJogo {
+            width: 100%;
+            max-width: 1200px;
+        }
+
+        .info-jogo {
+            background: white;
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.2);
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        .jogador-info h2 {
+            color: #667eea;
+            font-size: 1.5em;
+            margin-bottom: 5px;
+        }
+
+        .jogador-info p {
+            color: #666;
+            font-size: 1em;
+        }
+
+        .placar {
+            text-align: center;
+        }
+
+        .placar h3 {
+            color: #667eea;
+            margin-bottom: 10px;
+        }
+
+        #containerPlacar {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .item-placar {
+            background: #f0f0f0;
+            padding: 10px 15px;
+            border-radius: 8px;
+            min-width: 120px;
+        }
+
+        .item-placar .nome {
+            font-weight: bold;
+            color: #333;
+            font-size: 0.9em;
+        }
+
+        .item-placar .pontos {
+            color: #667eea;
+            font-size: 1.3em;
+            font-weight: bold;
+        }
+
+        .btn-pequeno {
+            padding: 10px 20px;
+            background: #764ba2;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.9em;
+            transition: background 0.2s;
+        }
+
+        .btn-pequeno:hover {
+            background: #5a3a80;
+        }
+
+        /* Tabuleiro */
+        .tabuleiro {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+            gap: 10px;
+            margin-bottom: 20px;
+            background: rgba(255, 255, 255, 0.1);
+            padding: 20px;
+            border-radius: 15px;
+        }
+
+        .carta {
+            width: 100%;
+            aspect-ratio: 1;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border: none;
+            border-radius: 12px;
+            cursor: pointer;
+            font-size: 2.5em;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .carta:hover:not(.desabilitada) {
+            transform: scale(1.05);
+        }
+
+        .carta:active:not(.desabilitada) {
+            transform: scale(0.98);
+        }
+
+        .carta.desabilitada {
+            cursor: not-allowed;
+            opacity: 0.5;
+        }
+
+        .carta.virada {
+            background: white;
+            color: #333;
+        }
+
+        .carta.coringa {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+        }
+
+        .carta.coringa.virada {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+        }
+
+        .carta.pareada {
+            opacity: 0.6;
+        }
+
+        /* Tela Final */
+        .container-final {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+            max-width: 600px;
+            width: 100%;
+            text-align: center;
+        }
+
+        .container-final h1 {
+            font-size: 2.5em;
+            color: #667eea;
+            margin-bottom: 30px;
+        }
+
+        .resultado-final {
+            background: #f0f0f0;
+            padding: 30px;
+            border-radius: 15px;
+            margin-bottom: 20px;
+        }
+
+        .perdedor {
+            font-size: 1.5em;
+            color: #f5576c;
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+
+        .perdedor-nome {
+            font-size: 2em;
+            color: #667eea;
+        }
+
+        .coringa-emoji {
+            font-size: 3em;
+            margin: 20px 0;
+        }
+
+        @media (max-width: 768px) {
+            .tabuleiro {
+                grid-template-columns: repeat(auto-fit, minmax(80px, 1fr));
+                gap: 8px;
+                padding: 15px;
+            }
+
+            .carta {
+                font-size: 2em;
+            }
+
+            .container-inicial,
+            .container-final {
+                padding: 25px;
+            }
+
+            .container-inicial h1,
+            .container-final h1 {
+                font-size: 1.8em;
+            }
+
+            .info-jogo {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            #containerPlacar {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Tela Inicial -->
+    <div id="telaInicial" class="tela">
+        <div class="container-inicial">
+            <h1>🎮 Jogo dos Animais 🎮</h1>
+            <p class="subtitulo">Encontre os pares de animais!</p>
+            
+            <div class="input-grupo">
+                <label for="numJogadores">Quantos jogadores? (2-5)</label>
+                <input type="number" id="numJogadores" min="2" max="5" value="2">
+            </div>
+
+            <div id="containerNomes" class="container-nomes"></div>
+
+            <button id="btnIniciar" class="btn-grande">Iniciar Jogo</button>
+        </div>
+    </div>
+
+    <!-- Tela do Jogo -->
+    <div id="telaJogo" class="tela oculta">
+        <div class="info-jogo">
+            <div class="jogador-info">
+                <h2 id="nomeJogadorAtual">Jogador 1</h2>
+                <p id="vezAtual">É sua vez!</p>
+            </div>
+            <div class="placar">
+                <h3>Placar</h3>
+                <div id="containerPlacar"></div>
+            </div>
+            <button id="btnNovoJogo" class="btn-pequeno">Novo Jogo</button>
+        </div>
+
+        <div class="tabuleiro" id="tabuleiro"></div>
+    </div>
+
+    <!-- Tela Final -->
+    <div id="telaFinal" class="tela oculta">
+        <div class="container-final">
+            <h1>🎊 Jogo Finalizado! 🎊</h1>
+            <div id="resultadoFinal" class="resultado-final"></div>
+            <button id="btnReiniciar" class="btn-grande">Jogar Novamente</button>
+        </div>
+    </div>
+
+    <script>
+        // Animais disponíveis (24 pares)
+        const ANIMAIS = [
+            { nome: 'Leão', femea: '🦁', macho: '🦁' },
+            { nome: 'Tigre', femea: '🐅', macho: '🐅' },
+            { nome: 'Zebra', femea: '🦓', macho: '🦓' },
+            { nome: 'Gato', femea: '🐱', macho: '😺' },
+            { nome: 'Cachorro', femea: '🐶', macho: '🐕' },
+            { nome: 'Urso', femea: '🧸', macho: '🐻' },
+            { nome: 'Panda', femea: '🐼', macho: '🐼' },
+            { nome: 'Coelho', femea: '🐰', macho: '🐇' },
+            { nome: 'Raposa', femea: '🦊', macho: '🦊' },
+            { nome: 'Lobo', femea: '🐺', macho: '🐺' },
+            { nome: 'Cabra', femea: '🐐', macho: '🐐' },
+            { nome: 'Vaca', femea: '🐄', macho: '🐂' },
+            { nome: 'Porco', femea: '🐷', macho: '🐷' },
+            { nome: 'Ovelha', femea: '🐑', macho: '🐑' },
+            { nome: 'Cavalo', femea: '🐴', macho: '🐎' },
+            { nome: 'Camelo', femea: '🐫', macho: '🐪' },
+            { nome: 'Girafa', femea: '🦒', macho: '🦒' },
+            { nome: 'Elefante', femea: '🐘', macho: '🐘' },
+            { nome: 'Rinoceronte', femea: '🦏', macho: '🦏' },
+            { nome: 'Hipopótamo', femea: '🦛', macho: '🦛' },
+            { nome: 'Chimpanzé', femea: '🐵', macho: '🐵' },
+            { nome: 'Macaco', femea: '🐒', macho: '🐒' },
+            { nome: 'Avestruz', femea: '🐦', macho: '🐦' },
+            { nome: 'Flamingo', femea: '🦩', macho: '🦩' }
+        ];
+
+        const CORINGA = {
+            nome: 'Coringa',
+            emoji: '🎭'
+        };
+
+        // Estado do jogo
+        let estadoJogo = {
+            cartas: [],
+            jogadores: [],
+            jogadorAtual: 0,
+            cartasViradas: [],
+            pareosEncontrados: [],
+            pontos: {},
+            corinaEncontrado: false,
+            jogoEmAndamento: false
+        };
+
+        // Inicialização
+        document.getElementById('numJogadores').addEventListener('change', atualizarInputNomes);
+        document.getElementById('btnIniciar').addEventListener('click', iniciarJogo);
+        document.getElementById('btnNovoJogo').addEventListener('click', resetarJogo);
+        document.getElementById('btnReiniciar').addEventListener('click', resetarJogo);
+
+        function atualizarInputNomes() {
+            const num = parseInt(document.getElementById('numJogadores').value);
+            const container = document.getElementById('containerNomes');
+            container.innerHTML = '';
+
+            for (let i = 1; i <= num; i++) {
+                const div = document.createElement('div');
+                div.className = 'input-nome';
+                div.innerHTML = `
+                    <label>Jogador ${i}:</label>
+                    <input type="text" placeholder="Nome do jogador ${i}" class="input-jogador">
+                `;
+                container.appendChild(div);
+            }
+        }
+
+        function iniciarJogo() {
+            const num = parseInt(document.getElementById('numJogadores').value);
+            const inputs = document.querySelectorAll('.input-jogador');
+            const nomes = [];
+
+            inputs.forEach(input => {
+                const nome = input.value.trim() || `Jogador ${nomes.length + 1}`;
+                nomes.push(nome);
+            });
+
+            // Inicializar estado
+            estadoJogo.jogadores = nomes;
+            estadoJogo.jogadorAtual = 0;
+            estadoJogo.cartasViradas = [];
+            estadoJogo.pareosEncontrados = [];
+            estadoJogo.pontos = {};
+            estadoJogo.corinaEncontrado = false;
+            estadoJogo.jogoEmAndamento = true;
+
+            nomes.forEach(nome => {
+                estadoJogo.pontos[nome] = 0;
+            });
+
+            // Criar cartas
+            criarCartas();
+
+            // Atualizar UI
+            document.getElementById('telaInicial').classList.add('oculta');
+            document.getElementById('telaJogo').classList.remove('oculta');
+            document.getElementById('telaFinal').classList.add('oculta');
+
+            atualizarTabuleiro();
+            atualizarInfoJogador();
+            atualizarPlacar();
+        }
+
+        function criarCartas() {
+            estadoJogo.cartas = [];
+
+            // Adicionar pares de animais
+            ANIMAIS.forEach((animal, index) => {
+                estadoJogo.cartas.push({
+                    id: index * 2,
+                    tipo: 'animal',
+                    nome: animal.nome,
+                    emoji: animal.femea,
+                    genero: 'femea',
+                    par: index * 2 + 1
+                });
+                estadoJogo.cartas.push({
+                    id: index * 2 + 1,
+                    tipo: 'animal',
+                    nome: animal.nome,
+                    emoji: animal.macho,
+                    genero: 'macho',
+                    par: index * 2
+                });
+            });
+
+            // Adicionar coringa
+            const idCoringa = ANIMAIS.length * 2;
+            estadoJogo.cartas.push({
+                id: idCoringa,
+                tipo: 'coringa',
+                nome: CORINGA.nome,
+                emoji: CORINGA.emoji,
+                par: -1
+            });
+
+            // Embaralhar
+            embaralhar(estadoJogo.cartas);
+        }
+
+        function embaralhar(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+        }
+
+        function atualizarTabuleiro() {
+            const tabuleiro = document.getElementById('tabuleiro');
+            tabuleiro.innerHTML = '';
+
+            estadoJogo.cartas.forEach(carta => {
+                const button = document.createElement('button');
+                button.className = 'carta';
+                button.id = `carta-${carta.id}`;
+                button.textContent = '?';
+
+                // Verificar se a carta já foi pareada
+                if (estadoJogo.pareosEncontrados.includes(carta.id)) {
+                    button.classList.add('pareada');
+                    button.disabled = true;
+                }
+
+                // Verificar se a carta está virada
+                if (estadoJogo.cartasViradas.includes(carta.id)) {
+                    button.textContent = carta.emoji;
+                    button.classList.add('virada');
+                    if (carta.tipo === 'coringa') {
+                        button.classList.add('coringa');
+                    }
+                }
+
+                button.addEventListener('click', () => virarCarta(carta));
+                tabuleiro.appendChild(button);
+            });
+        }
+
+        function virarCarta(carta) {
+            if (!estadoJogo.jogoEmAndamento) return;
+            if (estadoJogo.cartasViradas.length >= 2) return;
+            if (estadoJogo.cartasViradas.includes(carta.id)) return;
+            if (estadoJogo.pareosEncontrados.includes(carta.id)) return;
+
+            estadoJogo.cartasViradas.push(carta.id);
+            atualizarTabuleiro();
+
+            if (estadoJogo.cartasViradas.length === 2) {
+                verificarPar();
+            }
+        }
+
+        function verificarPar() {
+            const [id1, id2] = estadoJogo.cartasViradas;
+            const carta1 = estadoJogo.cartas.find(c => c.id === id1);
+            const carta2 = estadoJogo.cartas.find(c => c.id === id2);
+
+            // Verificar se encontrou o coringa
+            if (carta1.tipo === 'coringa' || carta2.tipo === 'coringa') {
+                const jogadorAtual = estadoJogo.jogadores[estadoJogo.jogadorAtual];
+                estadoJogo.pontos[jogadorAtual]++;
+                estadoJogo.corinaEncontrado = true;
+                estadoJogo.pareosEncontrados.push(id1, id2);
+
+                setTimeout(() => {
+                    finalizarJogo(jogadorAtual);
+                }, 500);
+                return;
+            }
+
+            // Verificar se encontrou um par
+            if (carta1.nome === carta2.nome && carta1.genero !== carta2.genero) {
+                const jogadorAtual = estadoJogo.jogadores[estadoJogo.jogadorAtual];
+                estadoJogo.pontos[jogadorAtual]++;
+                estadoJogo.pareosEncontrados.push(id1, id2);
+                estadoJogo.cartasViradas = [];
+
+                atualizarTabuleiro();
+                atualizarPlacar();
+            } else {
+                setTimeout(() => {
+                    estadoJogo.cartasViradas = [];
+                    atualizarTabuleiro();
+                    proximoJogador();
+                }, 1000);
+            }
+        }
+
+        function proximoJogador() {
+            estadoJogo.jogadorAtual = (estadoJogo.jogadorAtual + 1) % estadoJogo.jogadores.length;
+            atualizarInfoJogador();
+        }
+
+        function atualizarInfoJogador() {
+            const jogadorAtual = estadoJogo.jogadores[estadoJogo.jogadorAtual];
+            document.getElementById('nomeJogadorAtual').textContent = jogadorAtual;
+            document.getElementById('vezAtual').textContent = 'É sua vez!';
+        }
+
+        function atualizarPlacar() {
+            const container = document.getElementById('containerPlacar');
+            container.innerHTML = '';
+
+            estadoJogo.jogadores.forEach(jogador => {
+                const div = document.createElement('div');
+                div.className = 'item-placar';
+                div.innerHTML = `
+                    <div class="nome">${jogador}</div>
+                    <div class="pontos">${estadoJogo.pontos[jogador]}</div>
+                `;
+                container.appendChild(div);
+            });
+        }
+
+        function finalizarJogo(perdedor) {
+            estadoJogo.jogoEmAndamento = false;
+
+            const container = document.getElementById('resultadoFinal');
+            container.innerHTML = `
+                <div class="coringa-emoji">🎭</div>
+                <div class="perdedor">
+                    O jogador que ficou com a carta coringa foi:
+                </div>
+                <div class="perdedor-nome">${perdedor}</div>
+                <div class="perdedor" style="margin-top: 20px; font-size: 1.2em;">
+                    ${perdedor} é o PERDEDOR! 😄
+                </div>
+            `;
+
+            document.getElementById('telaJogo').classList.add('oculta');
+            document.getElementById('telaFinal').classList.remove('oculta');
+        }
+
+        function resetarJogo() {
+            document.getElementById('telaInicial').classList.remove('oculta');
+            document.getElementById('telaJogo').classList.add('oculta');
+            document.getElementById('telaFinal').classList.add('oculta');
+            atualizarInputNomes();
+        }
+
+        // Inicializar inputs de nome
+        atualizarInputNomes();
+    </script>
+</body>
+</html>

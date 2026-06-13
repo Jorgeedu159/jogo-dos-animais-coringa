@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <meta name="description" content="Jogo de memória de animais com coringa para até 5 jogadores">
+    <title>Jogo dos Animais - Coringa</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <main class="app-shell">
+        <section id="telaInicial" class="tela screen screen--home">
+            <div class="panel panel--centered">
+                <div class="panel__header">
+                    <h1>🎮 Jogo dos Animais</h1>
+                    <p class="subtitulo">Encontre os pares de animais antes de virar a carta coringa.</p>
+                </div>
+                <div class="panel__body">
+                    <div class="input-grupo">
+                        <label for="numJogadores">Quantos jogadores? (2-5)</label>
+                        <input type="number" id="numJogadores" min="2" max="5" value="2" aria-describedby="numJogadoresHelp">
+                        <p id="numJogadoresHelp" class="help-text">Use as setas ou digite um número entre 2 e 5.</p>
+                    </div>
+                    <div id="containerNomes" class="container-nomes"></div>
+                </div>
+                <div class="panel__footer">
+                    <button id="btnIniciar" class="btn btn--primary">Iniciar Jogo</button>
+                </div>
+            </div>
+        </section>
+
+        <section id="telaJogo" class="tela screen screen--game screen--hidden">
+            <div class="game-header">
+                <div class="current-player-card">
+                    <span class="label">Vez de</span>
+                    <strong id="nomeJogadorAtual">Jogador 1</strong>
+                    <span id="vezAtual" class="status-text">É sua vez!</span>
+                </div>
+                <div class="game-controls">
+                    <button id="btnNovoJogo" class="btn btn--secondary">Novo Jogo</button>
+                </div>
+            </div>
+            <div class="board-wrapper">
+                <div class="score-panel">
+                    <h2>Placar</h2>
+                    <div id="containerPlacar" class="placar"></div>
+                </div>
+                <div id="tabuleiro" class="tabuleiro" aria-label="Tabuleiro de cartas"></div>
+            </div>
+        </section>
+
+        <section id="telaFinal" class="tela screen screen--final screen--hidden">
+            <div class="panel panel--centered panel--final">
+                <h1>🎊 Fim de Jogo</h1>
+                <div id="resultadoFinal" class="resultado-final"></div>
+                <button id="btnReiniciar" class="btn btn--primary">Jogar Novamente</button>
+            </div>
+        </section>
+    </main>
+
+    <script type="module" src="script.js"></script>
+</body>
+</html>

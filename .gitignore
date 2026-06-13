@@ -1,0 +1,6 @@
+# Ignore compiled server executable and user/temp files
+multiplayer/server.exe
+*.user
+*.log
+*.tmp
+*.DS_Store

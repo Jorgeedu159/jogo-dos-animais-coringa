@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta name="description" content="Jogo multiplayer de animais com carta coringa">
+  <title>Jogo dos Animais - Multiplayer</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <main class="app-shell">
+    <section class="screen screen--home" id="homeScreen">
+      <div class="panel panel--centered">
+        <header class="panel__header">
+          <h1>🎮 Jogo dos Animais</h1>
+          <p class="subtitulo">Entre no jogo e jogue com amigos em outros computadores.</p>
+        </header>
+        <div class="panel__body">
+          <div class="input-grupo">
+            <label for="playerName">Seu nome</label>
+            <input type="text" id="playerName" placeholder="Digite seu nome" />
+          </div>
+
+          <div class="input-grupo">
+            <label for="playMode">Modo de jogo</label>
+            <select id="playMode">
+              <option value="single">Solo com IA</option>
+              <option value="multiplayer">Multiplayer</option>
+            </select>
+          </div>
+
+          <div class="input-grupo">
+            <label for="difficulty">Nível de dificuldade (IA)</label>
+            <select id="difficulty">
+              <option value="easy">Fácil</option>
+              <option value="medium" selected>Médio</option>
+              <option value="hard">Difícil</option>
+            </select>
+          </div>
+
+          <div class="input-grupo">
+            <label for="avatarPicker">Escolha seu boneco</label>
+            <div id="avatarPicker" class="avatar-picker" aria-label="Escolha um avatar">
+              <button type="button" class="avatar selected" data-avatar="🐵">🐵</button>
+              <button type="button" class="avatar" data-avatar="🐶">🐶</button>
+              <button type="button" class="avatar" data-avatar="🐱">🐱</button>
+              <button type="button" class="avatar" data-avatar="🐼">🐼</button>
+              <button type="button" class="avatar" data-avatar="🦊">🦊</button>
+              <button type="button" class="avatar" data-avatar="🤖">🤖</button>
+            </div>
+          </div>
+
+          <div class="input-grupo">
+            <label for="maxPlayers">Número de jogadores (2-5)</label>
+            <input type="number" id="maxPlayers" min="2" max="5" value="2" />
+          </div>
+
+          <div class="status-card" id="joinStatus">Conecte-se ao servidor para começar.</div>
+        </div>
+        <footer class="panel__footer">
+          <button id="joinButton" class="btn btn--primary">Entrar no Jogo</button>
+        </footer>
+      </div>
+    </section>
+
+    <section class="screen screen--game screen--hidden" id="gameScreen">
+      <div class="game-header">
+        <div class="current-player-card">
+          <span class="label">Você</span>
+          <strong id="currentPlayerName">—</strong>
+          <span id="gameStatus" class="status-text">Aguardando início</span>
+        </div>
+        <div class="game-controls">
+          <button id="resetButton" class="btn btn--secondary">Reiniciar Jogo</button>
+        </div>
+      </div>
+      <div class="board-wrapper">
+        <aside class="score-panel">
+          <h2>Jogadores</h2>
+          <div id="scoreBoard" class="placar"></div>
+          <div id="serverInfo" class="help-text"></div>
+        </aside>
+        <section id="board" class="tabuleiro" aria-label="Tabuleiro de cartas"></section>
+      </div>
+    </section>
+
+    <section class="screen screen--final screen--hidden" id="finalScreen">
+      <div class="panel panel--centered panel--final">
+        <h1>🎊 Fim de Jogo</h1>
+        <div id="finalMessage" class="resultado-final"></div>
+        <button id="playAgainButton" class="btn btn--primary">Jogar Novamente</button>
+      </div>
+    </section>
+  </main>
+
+  <script src="script.js"></script>
+</body>
+</html>
